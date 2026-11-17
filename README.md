@@ -6,7 +6,7 @@
 The brain inside is real: every neuron is cut from a complete adult fly nervous system.
 
 [![Latest Release](https://img.shields.io/github/v/release/AA-EION/FlyVerb-CICD-RELEASE?label=Latest%20Release&color=0f172a)](../../releases/latest)
-[![Platforms](https://img.shields.io/badge/Platforms-Windows%2010%2F11%20%7C%20macOS%2011%2B-16a34a)](#installers)
+[![Platforms](https://img.shields.io/badge/Platforms-Windows%2010%2F11%20%7C%20macOS%2011%2B%20%7C%20Linux-16a34a)](#installers)
 [![Formats](https://img.shields.io/badge/Formats-VST3%20%7C%20AU%20%7C%20CLAP%20%7C%20AAX%20%7C%20Standalone-ea580c)](#supported-formats)
 [![License](https://img.shields.io/badge/License-Proprietary-64748b)](https://eionstudios.com)
 
@@ -41,8 +41,13 @@ That page always has the current version for your system. The same installers ar
 |---|---|---|---|
 | **Windows 10 / 11** | Universal (`x64` + `ARM64`) | `FlyVerb-<version>-Windows-Universal-Installer.exe` | VST3, CLAP, AAX, Standalone |
 | **macOS 11+** | Universal 2 (`arm64` + `x86_64`) | `FlyVerb-<version>-macOS-Universal.dmg` | `Install FlyVerb.pkg` (VST3, AU v2, CLAP, AAX, Standalone) and `Uninstall FlyVerb.command` |
+| **Linux** (Ubuntu, Debian, Mint) | `x86_64` | `FlyVerb-<version>-Linux-x64.deb` | VST3, CLAP, Standalone. Double-click to install with the Software app |
+| **Linux** (Fedora, openSUSE, RHEL) | `x86_64` | `FlyVerb-<version>-Linux-x64.rpm` | VST3, CLAP, Standalone. Double-click to install |
+| **Linux** (any distribution) | `x86_64` | `FlyVerb-<version>-Linux-x64.tar.gz` | VST3, CLAP, Standalone. Unpack and run `./install.sh` (no root needed) |
 
 AAX is x64 only.
+
+Linux builds run on any 64-bit distribution with glibc 2.28 or newer (Ubuntu 20.04, Debian 10, Fedora 29, RHEL 8 and later). The `.deb` and `.rpm` install for every user and are removed like any other package; `./install.sh --uninstall` removes a `.tar.gz` install.
 
 Every release also carries `release-manifest.json`, which lists each installer with its size and SHA-256. The plug-ins' update check, the EION Studios plug-in store and the Launcher read only that file.
 
@@ -52,13 +57,13 @@ Every release also carries `release-manifest.json`, which lists each installer w
 
 FlyVerb registers under the manufacturer **EION Studios** in your DAW plug-in browser.
 
-| Format | Windows | macOS |
-|---|---|---|
-| **VST3** | `C:\Program Files\Common Files\VST3\FlyVerb.vst3` | `/Library/Audio/Plug-Ins/VST3/FlyVerb.vst3` |
-| **AU v2** | — | `/Library/Audio/Plug-Ins/Components/FlyVerb.component` |
-| **CLAP** | `C:\Program Files\Common Files\CLAP\FlyVerb.clap` | `/Library/Audio/Plug-Ins/CLAP/FlyVerb.clap` |
-| **AAX** | `C:\Program Files\Common Files\Avid\Audio\Plug-Ins\FlyVerb.aaxplugin` | `/Library/Application Support/Avid/Audio/Plug-Ins/FlyVerb.aaxplugin` |
-| **Standalone** | `C:\Program Files\EION Studios\FlyVerb\FlyVerb.exe` | `/Applications/FlyVerb.app` |
+| Format | Windows | macOS | Linux |
+|---|---|---|---|
+| **VST3** | `C:\Program Files\Common Files\VST3\FlyVerb.vst3` | `/Library/Audio/Plug-Ins/VST3/FlyVerb.vst3` | `/usr/lib/vst3/FlyVerb.vst3` (`~/.vst3` with `install.sh`) |
+| **AU v2** | — | `/Library/Audio/Plug-Ins/Components/FlyVerb.component` | — |
+| **CLAP** | `C:\Program Files\Common Files\CLAP\FlyVerb.clap` | `/Library/Audio/Plug-Ins/CLAP/FlyVerb.clap` | `/usr/lib/clap/FlyVerb.clap` (`~/.clap` with `install.sh`) |
+| **AAX** | `C:\Program Files\Common Files\Avid\Audio\Plug-Ins\FlyVerb.aaxplugin` | `/Library/Application Support/Avid/Audio/Plug-Ins/FlyVerb.aaxplugin` | — |
+| **Standalone** | `C:\Program Files\EION Studios\FlyVerb\FlyVerb.exe` | `/Applications/FlyVerb.app` | applications menu, or `flyverb` in a terminal |
 
 ---
 
@@ -72,12 +77,18 @@ When a new version is published here, FlyVerb tells you inside the plug-in and o
 
 - **macOS**: signed with an **Apple Developer ID** certificate (Hardened Runtime), notarized by Apple and stapled to both the `.pkg` and the `.dmg`. AAX bundles are wrapped and signed with **PACE Eden**. Installs without Gatekeeper warnings.
 - **Windows**: AAX bundles are wrapped and signed with **PACE Eden** for Avid Pro Tools. The other binaries carry no public Authenticode certificate, so Windows SmartScreen shows an unknown-publisher prompt: choose *More info → Run anyway*.
+- **Linux**: built with the same Kuroko hardening as the other platforms (obfuscation, full ELF mitigations). Linux has no central code-signing authority: check the SHA-256 below against `release-manifest.json`.
 
 Check a download against the SHA-256 in the release notes:
 
 ```bash
 # macOS
 shasum -a 256 FlyVerb-*-macOS-Universal.dmg
+```
+
+```bash
+# Linux
+sha256sum FlyVerb-*-Linux-x64.*
 ```
 
 ```powershell
